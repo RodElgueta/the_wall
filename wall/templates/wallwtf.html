@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<form action="Postmsg" method="POST" class="row g-3" id="postform">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label text-light">Post a Message</label>
+        <textarea form="postform" class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary float-end">Post</button>
+    </div>
+</form>
+
+<div class="accordion" id="accordionPanelsStayOpenExample1">
+    {%for message in messages%}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading{{message.id}}">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{message.id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{message.id}}">
+                {{message.user.name}} - <span class="ms-1 text-success">{{message.created_at}}</span>
+            </button>
+        </h2>
+        <div id="panelsStayOpen-collapse{{message.id}}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading{{message.id}}">
+            <div class="accordion-body">
+                <p class="text-dark">{{message.message}}</p>
+                <div class="accordion" id="accordionPanelsStayOpenExample2">
+                    {%for comment in message.msg_comments.all%}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-heading{{comment.id}}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{comment.id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{comment.id}}">
+                                {{comment.user.name}} - <span class="ms-1 text-success">{{comment.created_at}}</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapse{{comment.id}}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading{{comment.id}}">
+                            <div class="accordion-body">
+                                <p class="text-dark">{{comment.comment}}</p>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+<div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                Accordion Item #1
+            </button>
+        </h2>
+        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+            <div class="accordion-body">
+                <strong>This is the first item's accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the </strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class="col-8">
+    <form action="" method="POST" class="row g-3" id="postform">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label text-light">Post a Message</label>
+            <textarea for="postform" class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary float-end">Post</button>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-10">
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            {%for message in messages%}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-heading{{message.id}}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{message.id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{message.id}}">
+                        {{message.user.name}}      - <span class="ms-1 text-success">{{message.created_at}}</span>
+                    </button>
+                </h2>
+                
+                <div id="panelsStayOpen-collapse{{message.id}}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading{{message.id}}">
+                    <div class="accordion-body">
+                        <p class="text-wrap text-break">{{message.message}}</p>
+                        <form action="editmsg" method="POST" class="row g-3" id="">
+                            {% csrf_token %}
+                            <p><button type="submit" class="btn btn-primary float-end" name="{{message.id}}">Edit</button></p>
+                        </form>
+                        <form action="delete/{{message.id}}" method="POST" class="row g-3" id="">
+                            {% csrf_token %}
+                            <p><button type="submit" class="btn btn-danger float-end" name="{{message.id}}">Delete</button></p>
+                        </form>
+                        <h5 class="text-success">Post a comment</h5>
+                        <form action="comment/{{message.id}}" method="POST" class="row g-3" id="commentform{{message.id}}">
+                            {% csrf_token %}
+                            <textarea for="commentform{{message.id}}" class="form-control" id="exampleFormControlTextarea1" rows="3" name="comment"></textarea>
+                            <p><button type="submit" class="btn btn-primary float-end">Comment</button></p>
+                        </form>
+                                
+                        <div class="accordion" id="accordionPanelsStayOpenExample2">
+                        {%for comment in message.msg_comments.all%}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingCom{{comment.id}}">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseCom{{comment.id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapseCom{{comment.id}}">
+                                        <p><span>{{comment.user.name}}</span> - <span class="ms-1 text-success">{{comment.created_at}}</span></p>
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseCom{{comment.id}}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingCom{{comment.id}}">
+                                    <div class="accordion-body">
+                                        <p class="text-break">{{comment.comment}}</p>
+                                        <form action="editpost" method="POST" class="row g-3" id="">
+                                            {% csrf_token %}
+                                            <p><button type="submit" class="btn btn-primary float-end" name="{{comment.id}}">Edit</button></p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div> 
+                        {%endfor%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</div>
+{% endblock %}
