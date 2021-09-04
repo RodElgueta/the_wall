@@ -20,28 +20,30 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-heading{{message.id}}">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{message.id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{message.id}}">
-                        {{message.user.name}}      - <span class="ms-1 text-success">{{message.created_at}}</span>
+                        <h4>{{message.user.name}}    -  </h4>           <span class="ms-1 text-success">{{message.created_at}}</span>
                     </button>
                 </h2>
                 
                 <div id="panelsStayOpen-collapse{{message.id}}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading{{message.id}}">
                     <div class="accordion-body">
                         <p class="text-wrap text-break">{{message.message}}</p>
-                        <form action="editmsg" method="POST" class="row g-3" id="">
-                            {% csrf_token %}
-                            <p><button type="submit" class="btn btn-primary float-end" name="{{message.id}}">Edit</button></p>
-                        </form>
-                        <form action="delete/{{message.id}}" method="POST" class="row g-3" id="">
-                            {% csrf_token %}
-                            <p><button id="btndelete" type="submit" class="btn btn-danger float-end" name="{{message.id}}">Delete</button></p>
-                        </form>
+                        {% if message.user.id == request.session.user.id%}
+                        <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                            <form action="editmsg" method="POST" class="row g-3" id="">
+                                {% csrf_token %}
+                                <p><button type="submit" class="btn btn-primary float-end btn-sm" name="{{message.id}}">Edit</button></p>
+                            </form>
+                        
+                            
+                            <p><button data-url="../delete/{{message.id}}" data-bs-toggle="modal" data-bs-target="#myModal" class="btndelete btn btn-danger float-end btn-sm" type="submit"  name="">Delete</button></p>
+                        </div>
                         <h5 class="text-success">Post a comment</h5>
                         <form action="comment/{{message.id}}" method="POST" class="row g-3" id="commentform{{message.id}}">
                             {% csrf_token %}
                             <textarea for="commentform{{message.id}}" class="form-control" id="exampleFormControlTextarea1" rows="3" name="comment"></textarea>
                             <p><button type="submit" class="btn btn-primary float-end">Comment</button></p>
                         </form>
-                                
+                        {%endif%}
                         <div class="accordion" id="accordionPanelsStayOpenExample2">
                         {%for comment in message.msg_comments.all%}
                             <div class="accordion-item">
@@ -53,14 +55,17 @@
                                 <div id="panelsStayOpen-collapseCom{{comment.id}}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingCom{{comment.id}}">
                                     <div class="accordion-body">
                                         <p class="text-break">{{comment.comment}}</p>
-                                        <form action="editpost" method="POST" class="row g-3" id="">
+                                        {% if comment.user.id == request.session.user.id%}
+                                        <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                                            <form action="editpost" method="POST" class="row g-3" id="">
                                             {% csrf_token %}
-                                            <p><button type="submit" class="btn btn-primary float-end" name="{{comment.id}}">Edit</button></p>
-                                        </form>
-                                        <form action="deletecom/{{comment.id}}" method="POST" class="row g-3" id="">
-                                            {% csrf_token %}
-                                            <p><button type="submit" class="btn btn-danger float-end" name="{{comment.id}}">Delete</button></p>
-                                        </form>
+                                            
+                                                <button type="submit" class="btn btn-primary btn-sm" name="{{comment.id}}">Edit</button>
+                                            </form>
+                                            
+                                            <button data-url="../deletecom/{{comment.id}}" data-bs-toggle="modal" data-bs-target="#myModal" class="btndelete btn btn-danger btn-sm" type="submit" name="">Delete</button>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div> 
