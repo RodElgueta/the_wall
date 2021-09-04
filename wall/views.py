@@ -12,7 +12,7 @@ def index(request):
     context = {
         'saludo': 'Hola'
     }
-    return redirect('/signup')
+    return redirect('/login')
 
 
 def signup(request):
@@ -83,13 +83,15 @@ def login(request):
             messages.error(request,"Invalid Username/Password")
             return redirect('/login')
 
+@login_req
 def logout(request):
     del request.session['user']
     return redirect('/login')
 
+@login_req
 def wall(request):
     if request.method == 'GET':
-        context = {'messages': Messages.objects.all(),
+        context = {'Messages': Messages.objects.all(),
                     'comments': Comments.objects.all()}
         return render(request,'wall.html',context)
     else:
@@ -97,12 +99,14 @@ def wall(request):
             Messages.objects.create(message=message,user=Users.objects.get(id=int(request.session['user']['id'])))
             return redirect('/wall')
 
-def edit(request,int):
+@login_req
+def editmsg(request,msgid):
     message = Messages.objects.get(id=int)
     context = {'message':message}
 
-    return redirect('/wall')
+    return ('/wall')
 
+@login_req
 def comment(request,msgid):
     comment = request.POST['comment']
 
@@ -110,10 +114,27 @@ def comment(request,msgid):
     
     return redirect ('/wall')
 
+@login_req
 def delete(request,msgid):
     msgdel = Messages.objects.get(id=int(msgid))
-    msgdel.delete()
-    return redirect ('/wall')
+    if msgdel.user.id == request.session['user']['id']:
+        msgdel.delete()
+        messages.success(request,f'Message deleted')
+        return redirect ('/wall')
+    else:
+        messages.warning(request,f'Cant delete other users messages')
+        return redirect ('/wall')
+
+@login_req
+def deletecom(request,comid):
+    comdel = Comments.objects.get(id=int(comid))
+    if comdel.user.id == request.session['user']['id']:
+        comdel.delete()
+        messages.success(request,f'Comment deleted')
+        return redirect('/wall')
+    else:
+        messages.warning(request,f'Cant delete other users posts')
+        return redirect('/wall')
 
     
 
